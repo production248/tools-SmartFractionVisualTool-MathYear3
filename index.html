@@ -1,0 +1,146 @@
+﻿<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffca4f">
+  <meta name="description" content="An interactive visual tool for understanding fractions, decimals and percentages in SJKC Year 3 Mathematics.">
+  <title>Smart Fraction Visual Tool - Math Year 3</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">🍰</span>
+        <div>
+          <h1 data-i18n="appTitle">Jom Teroka Pecahan!</h1>
+          <p data-i18n="appSubtitle">Lihat, sentuh dan fahami bahagiannya.</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true">
+          <span aria-hidden="true">🔊</span><span data-i18n="soundOn">Bunyi: Buka</span>
+        </button>
+        <div class="language-switch" role="group" aria-label="Language">
+          <button class="language-btn active" type="button" data-lang="bm" aria-pressed="true">BM</button>
+          <button class="language-btn" type="button" data-lang="zh" aria-pressed="false">中文</button>
+          <button class="language-btn" type="button" data-lang="en" aria-pressed="false">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <nav class="mode-tabs" id="modeTabs" aria-label="Learning modes">
+        <button class="mode-tab active" type="button" data-mode="set" aria-pressed="true">
+          <span aria-hidden="true">🍎</span><span data-i18n="modeSet">Bahagian Kumpulan</span>
+        </button>
+        <button class="mode-tab" type="button" data-mode="pizza" aria-pressed="false">
+          <span aria-hidden="true">🍕</span><span data-i18n="modePizza">Piza Pecahan</span>
+        </button>
+        <button class="mode-tab" type="button" data-mode="equivalent" aria-pressed="false">
+          <span aria-hidden="true">🟰</span><span data-i18n="modeEquivalent">Pecahan Setara</span>
+        </button>
+        <button class="mode-tab" type="button" data-mode="mixed" aria-pressed="false">
+          <span aria-hidden="true">🧱</span><span data-i18n="modeMixed">Tak Wajar & Bercampur</span>
+        </button>
+        <button class="mode-tab" type="button" data-mode="hundred" aria-pressed="false">
+          <span aria-hidden="true">💯</span><span data-i18n="modeHundred">Grid Seratus</span>
+        </button>
+      </nav>
+
+      <section class="workspace">
+        <aside class="control-panel" aria-labelledby="modeTitle">
+          <div class="panel-heading">
+            <span class="eyebrow" data-i18n="chapter">D3 · Jilid 1</span>
+            <h2 id="modeTitle">Bahagian Kumpulan</h2>
+          </div>
+
+          <div class="chapter-card">
+            <span class="chapter-icon" aria-hidden="true">👀</span>
+            <div>
+              <strong data-i18n="learnBySeeing">Belajar dengan melihat</strong>
+              <p id="conceptTip">Penyebut menunjukkan jumlah bahagian yang sama.</p>
+            </div>
+          </div>
+
+          <div class="how-to-card">
+            <span class="how-to-icon" aria-hidden="true">☝️</span>
+            <p id="howToText">Tekan objek untuk memilih bahagiannya.</p>
+          </div>
+
+          <button class="secondary-btn teacher-btn" id="teacherBtn" type="button">
+            <span aria-hidden="true">👩‍🏫</span><span data-i18n="teacherQuestion">Guru buat soalan</span>
+          </button>
+
+          <button class="secondary-btn full-width" id="newQuestionBtn" type="button">
+            <span aria-hidden="true">↻</span><span data-i18n="newQuestion">Cuba soalan lain</span>
+          </button>
+        </aside>
+
+        <section class="visual-panel" aria-labelledby="promptText">
+          <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
+
+          <div class="prompt-row">
+            <div>
+              <span class="eyebrow" data-i18n="yourTask">Mari cuba!</span>
+              <h2 id="promptText">Tunjukkan pecahan daripada kumpulan ini.</h2>
+            </div>
+            <span class="level-badge" id="levelBadge">Matematik Tahun 3</span>
+          </div>
+
+          <div class="challenge-display" id="challengeDisplay" aria-live="polite"></div>
+          <div class="concept-stage" id="conceptStage"></div>
+
+          <div class="answer-actions">
+            <button class="secondary-btn" id="resetBtn" type="button">
+              <span aria-hidden="true">↺</span><span data-i18n="reset">Mula semula</span>
+            </button>
+            <button class="primary-btn" id="checkBtn" type="button">
+              <span aria-hidden="true">✓</span><span data-i18n="check">Semak</span>
+            </button>
+          </div>
+
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section class="learning-strip" aria-label="Learning steps">
+        <div><span>1</span><strong data-i18n="stepLook">Lihat keseluruhan</strong></div>
+        <div><span>2</span><strong data-i18n="stepTouch">Pilih bahagiannya</strong></div>
+        <div><span>3</span><strong data-i18n="stepConnect">Hubungkan nilainya</strong></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="forest-footer" aria-hidden="true">
+    <img src="assets/forest-footer.png" alt="">
+  </div>
+
+  <dialog class="teacher-dialog" id="teacherDialog" aria-labelledby="teacherDialogTitle">
+    <form class="teacher-form" id="teacherForm" novalidate>
+      <div class="teacher-dialog-header">
+        <div>
+          <span class="eyebrow" data-i18n="teacherMode">Mod guru</span>
+          <h2 id="teacherDialogTitle" data-i18n="teacherTitle">Bina soalan sendiri</h2>
+        </div>
+        <button class="dialog-close" id="teacherCloseBtn" type="button" aria-label="Close">×</button>
+      </div>
+      <p class="teacher-intro" data-i18n="teacherIntro">Tetapkan nombor untuk aktiviti ini.</p>
+      <div class="teacher-fields" id="teacherFields"></div>
+      <div class="teacher-error" id="teacherError" role="alert"></div>
+      <div class="teacher-dialog-actions">
+        <button class="secondary-btn" id="teacherCancelBtn" type="button" data-i18n="cancel">Batal</button>
+        <button class="primary-btn" type="submit">
+          <span aria-hidden="true">✓</span><span data-i18n="useQuestion">Gunakan soalan</span>
+        </button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="grade-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

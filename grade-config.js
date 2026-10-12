@@ -1,0 +1,1 @@
+﻿window.FRACTION_VISUAL_GRADE = "d3";
