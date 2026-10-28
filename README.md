@@ -7,9 +7,29 @@ Independent Math Year 3 edition based on the existing SJKC Year 3 Mathematics Ji
 - Languages: Bahasa Melayu, Chinese, and English
 - Input: mouse, touch, and keyboard friendly
 - Teacher controls: custom values within the existing activity limits
+- Classroom layout: EdCloud yellow/orange/brown theme with large interactive-whiteboard type
+- Shared components: current-mode operation guide and correct-answer celebration
+- Guide narration: 25 contextual steps in BM, Chinese, and English (75 MP3 files)
+- Original EdCloud-style wax-crayon navigation icons for all five modes
 
-This edition intentionally remains Year 3 only. Shared interface and interaction changes should
-be made in the source project and exported again so the deployed edition stays consistent.
+This edition intentionally remains Year 3 only.
+
+## Local preview and checks
+
+Open `index-preview.html` to view the tool without the EdCloud authorization handshake. The
+production entry remains `index.html`.
+
+```powershell
+npm.cmd run check
+npm.cmd test
+```
+
+The smoke test verifies all five modes, current-mode five-step guides, narration files, shared
+celebration, desktop whiteboard sizing, reduced motion, and the 390×844 mobile layout.
+
+Narration can be regenerated with `scripts/generate-guide-voices.py` after installing `edge-tts`.
+The configured voices are `ms-MY-YasminNeural`, `zh-CN-XiaoxiaoNeural`, and
+`en-SG-LunaNeural`, using speed `-10%` and pitch `0 Hz`.
 
 ## EdCloud authentication
 

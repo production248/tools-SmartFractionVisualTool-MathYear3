@@ -10,8 +10,10 @@
     bm: {
       appTitle: "Jom Teroka Pecahan!",
       appSubtitle: "Lihat, sentuh dan fahami bahagiannya.",
-      soundOn: "Bunyi: Buka",
-      soundOff: "Bunyi: Tutup",
+      soundOn: "Bunyi",
+      soundOff: "Senyap",
+      fullscreen: "Skrin penuh",
+      exitFullscreen: "Keluar penuh",
       modeSet: "Bahagian Kumpulan",
       modePizza: "Piza Pecahan",
       modeEquivalent: "Pecahan Setara",
@@ -112,8 +114,10 @@
     zh: {
       appTitle: "一起来探索分数！",
       appSubtitle: "观察、操作，理解整体与部分。",
-      soundOn: "声音：开",
-      soundOff: "声音：关",
+      soundOn: "声音",
+      soundOff: "静音",
+      fullscreen: "全屏",
+      exitFullscreen: "退出全屏",
       modeSet: "一组的一部分",
       modePizza: "披萨分数",
       modeEquivalent: "等值分数",
@@ -214,8 +218,10 @@
     en: {
       appTitle: "Let's Explore Fractions!",
       appSubtitle: "See, touch and understand parts of a whole.",
-      soundOn: "Sound: On",
-      soundOff: "Sound: Off",
+      soundOn: "Sound",
+      soundOff: "Muted",
+      fullscreen: "Full screen",
+      exitFullscreen: "Exit full screen",
       modeSet: "Part of a Group",
       modePizza: "Pizza Fractions",
       modeEquivalent: "Equivalent Fractions",
@@ -315,13 +321,51 @@
     }
   };
 
+  const guideCopy = (bmTitle, bmBody, zhTitle, zhBody, enTitle, enBody) => ({
+    bm: { title: bmTitle, body: bmBody },
+    zh: { title: zhTitle, body: zhBody },
+    en: { title: enTitle, body: enBody }
+  });
+
+  const FRACTION_GUIDE_COPY = {
+    "goal-set": guideCopy("Belajar pecahan kumpulan", "Belajar melihat satu pecahan sebagai beberapa kumpulan sama besar yang dipilih daripada keseluruhan.", "学习集合分数", "学习把整体平均分组，并找出被选中的组所表示的分数。", "Learn group fractions", "Learn to see a fraction as equal groups chosen from the whole set."),
+    "set-read": guideCopy("Baca pecahan", "Nombor atas ialah kumpulan yang perlu dipilih; nombor bawah ialah jumlah kumpulan sama besar.", "读出分数", "上面的数是要选择的组数，下面的数是平均分成的总组数。", "Read the fraction", "The top number is how many groups to choose; the bottom number is the total number of equal groups."),
+    "set-groups": guideCopy("Lihat kumpulan", "Setiap kotak ialah satu kumpulan yang sama besar.", "观察分组", "每个框都是一个数量相同的小组。", "See the groups", "Each box is one equal-sized group."),
+    "set-select": guideCopy("Pilih seluruh kumpulan", "Tekan seluruh kotak kumpulan sehingga bilangannya sama dengan pengangka.", "选择整组", "点击整个分组框，直到所选组数与分子相同。", "Choose whole groups", "Tap whole group boxes until the number chosen matches the numerator."),
+    "set-check": guideCopy("Semak jawapan", "Lihat bilangan kumpulan yang dipilih, kemudian tekan Semak.", "检查答案", "确认所选组数后，点击检查。", "Check the answer", "Review the number of selected groups, then press Check."),
+
+    "goal-pizza": guideCopy("Belajar pecahan piza", "Belajar bahawa satu keseluruhan boleh dibahagi kepada kepingan yang sama besar.", "学习披萨分数", "学习把一个整体平均分成相同大小的部分。", "Learn pizza fractions", "Learn that one whole can be divided into equal-sized slices."),
+    "pizza-read": guideCopy("Baca pecahan", "Penyebut menunjukkan jumlah kepingan dan pengangka menunjukkan kepingan yang dipilih.", "读出分数", "分母表示总片数，分子表示要选择的片数。", "Read the fraction", "The denominator shows all slices and the numerator shows how many to choose."),
+    "pizza-equal": guideCopy("Lihat kepingan sama", "Semua kepingan piza mempunyai saiz yang sama.", "观察相等部分", "所有披萨片的大小都相同。", "See equal slices", "Every pizza slice is the same size."),
+    "pizza-choose": guideCopy("Pilih kepingan", "Tekan kepingan sehingga bilangan yang dipilih sama dengan pengangka.", "选择披萨片", "点击披萨片，直到所选片数与分子相同。", "Choose the slices", "Tap slices until the number selected matches the numerator."),
+    "pizza-check": guideCopy("Semak jawapan", "Baca pecahan yang terbina, kemudian tekan Semak.", "检查答案", "读一读组成的分数，然后点击检查。", "Check the answer", "Read the fraction you built, then press Check."),
+
+    "goal-equivalent": guideCopy("Belajar pecahan setara", "Belajar bahawa pecahan dengan nombor berbeza boleh menunjukkan saiz yang sama.", "学习等值分数", "学习数字不同的分数也可以表示相同的大小。", "Learn equivalent fractions", "Learn that fractions with different numbers can show the same amount."),
+    "equivalent-read": guideCopy("Baca sasaran", "Lengkapkan pecahan kedua supaya panjang warnanya sama dengan pecahan contoh.", "读出目标", "完成第二个分数，让涂色长度与示范分数相同。", "Read the target", "Complete the second fraction so its shaded length matches the example."),
+    "equivalent-reference": guideCopy("Lihat jalur contoh", "Perhatikan berapa banyak bahagian dan panjang warna pada jalur pertama.", "观察示范条", "看看第一条分成多少份，以及涂色部分有多长。", "See the example bar", "Notice the parts and the shaded length in the first bar."),
+    "equivalent-shade": guideCopy("Warnakan panjang sama", "Tekan jalur bawah dari kiri sehingga kedua-dua warna sama panjang.", "涂出相同长度", "从左边点击下面的分数条，直到两条涂色长度相同。", "Shade the same length", "Tap the lower bar from the left until both shaded lengths match."),
+    "equivalent-check": guideCopy("Semak kesetaraan", "Bandingkan kedua-dua panjang, kemudian tekan Semak.", "检查是否等值", "比较两条涂色长度，然后点击检查。", "Check equivalence", "Compare both lengths, then press Check."),
+
+    "goal-mixed": guideCopy("Belajar nombor bercampur", "Belajar menghubungkan pecahan tak wajar dengan keseluruhan dan bahagian yang berbaki.", "学习带分数", "学习把假分数连接成完整的整体和剩余部分。", "Learn mixed numbers", "Learn to connect an improper fraction with wholes and a remaining part."),
+    "mixed-read": guideCopy("Baca nilai", "Lihat sama ada soalan menunjukkan pecahan tak wajar atau nombor bercampur.", "读出数值", "先看题目给的是假分数还是带分数。", "Read the value", "See whether the question shows an improper fraction or a mixed number."),
+    "mixed-whole": guideCopy("Lengkapkan keseluruhan", "Isi semua bahagian pada satu jalur sebelum bergerak ke jalur seterusnya.", "先完成整体", "先填满一整条，再继续下一条。", "Complete each whole", "Fill every part of one strip before moving to the next strip."),
+    "mixed-remainder": guideCopy("Bina bahagian baki", "Selepas jalur penuh, isi bahagian yang masih diperlukan.", "组成剩余部分", "完成整条后，再填入剩余需要的部分。", "Build the remainder", "After the full strips, fill the remaining parts you need."),
+    "mixed-check": guideCopy("Semak model", "Bandingkan model dengan nilai soalan, kemudian tekan Semak.", "检查模型", "把模型和题目数值比较，然后点击检查。", "Check the model", "Compare the model with the given value, then press Check."),
+
+    "goal-hundred": guideCopy("Belajar grid seratus", "Belajar menghubungkan pecahan per seratus, perpuluhan dan peratus pada satu grid.", "学习百格图", "学习用百格图连接百分数、小数和分母为一百的分数。", "Learn the hundred grid", "Learn to connect hundredths, decimals and percentages on one grid."),
+    "hundred-read": guideCopy("Baca nilai", "Kenal pasti sama ada soalan diberi sebagai pecahan, perpuluhan atau peratus.", "读出数值", "辨认题目给的是分数、小数还是百分数。", "Read the value", "Identify whether the value is shown as a fraction, decimal or percentage."),
+    "hundred-grid": guideCopy("Kira petak", "Setiap petak ialah satu per seratus dan setiap baris mempunyai sepuluh petak.", "数一数格子", "每一格是一百分之一，每一行有十格。", "Count the squares", "Each square is one hundredth and every row contains ten squares."),
+    "hundred-adjust": guideCopy("Warnakan grid", "Tekan petak, gunakan butang atau gerakkan peluncur untuk membina nilai.", "给百格图涂色", "点击格子、使用按钮或移动滑杆来组成数值。", "Shade the grid", "Tap squares, use the buttons, or move the slider to build the value."),
+    "hundred-check": guideCopy("Semak tiga bentuk", "Pastikan bilangan petak sepadan dengan nilai, kemudian tekan Semak.", "检查三种表示", "确认涂色格数与数值相同，然后点击检查。", "Check all forms", "Make sure the shaded squares match the value, then press Check.")
+  };
+
   const fractionChoices = [
     [1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [2, 5], [3, 5], [4, 5]
   ];
   const pizzaChoices = [
     ...fractionChoices, [1, 6], [5, 6], [3, 8], [5, 8], [7, 8]
   ];
-  const objectIcons = ["🍎", "⭐", "🐟", "🌼", "🧸", "🟠"];
+  const objectIcons = ["⭐", "🧸", "🟠", "🔶", "🌞", "🪙"];
   const hundredValues = [10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95];
 
   const state = {
@@ -335,9 +379,14 @@
   };
 
   let audioContext = null;
+  let operationGuide = null;
+  let activeGuideMode = null;
+  let configuredGuideMode = null;
 
   const modeTabs = document.getElementById("modeTabs");
   const soundToggle = document.getElementById("soundToggle");
+  const soundIcon = document.getElementById("soundIcon");
+  const fullscreenToggle = document.getElementById("fullscreenToggle");
   const modeTitle = document.getElementById("modeTitle");
   const conceptTip = document.getElementById("conceptTip");
   const howToText = document.getElementById("howToText");
@@ -348,7 +397,6 @@
   const resetBtn = document.getElementById("resetBtn");
   const checkBtn = document.getElementById("checkBtn");
   const newQuestionBtn = document.getElementById("newQuestionBtn");
-  const celebrationLayer = document.getElementById("celebrationLayer");
   const teacherBtn = document.getElementById("teacherBtn");
   const teacherDialog = document.getElementById("teacherDialog");
   const teacherForm = document.getElementById("teacherForm");
@@ -358,6 +406,90 @@
   const teacherCancelBtn = document.getElementById("teacherCancelBtn");
   const chapterEyebrow = document.querySelector("[data-i18n='chapter']");
   const levelBadge = document.getElementById("levelBadge");
+
+  const guideLanguage = () => state.lang;
+
+  function guideNarration(key) {
+    return {
+      bm: new URL(`assets/operation-guide/voices/bm/contextual/${key}.mp3`, document.baseURI).href,
+      zh: new URL(`assets/operation-guide/voices/zh/contextual/${key}.mp3`, document.baseURI).href,
+      en: new URL(`assets/operation-guide/voices/en/contextual/${key}.mp3`, document.baseURI).href
+    };
+  }
+
+  function fractionGuideStep(mode, key, target) {
+    return { id: `${mode}-${key}`, target, content: FRACTION_GUIDE_COPY[key], narration: guideNarration(key) };
+  }
+
+  function getModeGuideSteps(mode) {
+    const modeTarget = `.mode-tab[data-mode="${mode}"]`;
+    const flows = {
+      set: [
+        fractionGuideStep(mode, "goal-set", modeTarget),
+        fractionGuideStep(mode, "set-read", "#challengeDisplay"),
+        fractionGuideStep(mode, "set-groups", "#conceptStage .grouped-set"),
+        fractionGuideStep(mode, "set-select", "#conceptStage .selection-readout"),
+        fractionGuideStep(mode, "set-check", "#checkBtn")
+      ],
+      pizza: [
+        fractionGuideStep(mode, "goal-pizza", modeTarget),
+        fractionGuideStep(mode, "pizza-read", "#challengeDisplay"),
+        fractionGuideStep(mode, "pizza-equal", "#conceptStage .pizza-svg"),
+        fractionGuideStep(mode, "pizza-choose", "#conceptStage .pizza-guide"),
+        fractionGuideStep(mode, "pizza-check", "#checkBtn")
+      ],
+      equivalent: [
+        fractionGuideStep(mode, "goal-equivalent", modeTarget),
+        fractionGuideStep(mode, "equivalent-read", "#challengeDisplay"),
+        fractionGuideStep(mode, "equivalent-reference", "#conceptStage .bar-row:first-child"),
+        fractionGuideStep(mode, "equivalent-shade", "#conceptStage .bar-row:last-of-type"),
+        fractionGuideStep(mode, "equivalent-check", "#checkBtn")
+      ],
+      mixed: [
+        fractionGuideStep(mode, "goal-mixed", modeTarget),
+        fractionGuideStep(mode, "mixed-read", "#challengeDisplay"),
+        fractionGuideStep(mode, "mixed-whole", "#conceptStage .unit-bars"),
+        fractionGuideStep(mode, "mixed-remainder", "#conceptStage .bar-readout"),
+        fractionGuideStep(mode, "mixed-check", "#checkBtn")
+      ],
+      hundred: [
+        fractionGuideStep(mode, "goal-hundred", modeTarget),
+        fractionGuideStep(mode, "hundred-read", "#challengeDisplay"),
+        fractionGuideStep(mode, "hundred-grid", "#conceptStage .hundred-grid"),
+        fractionGuideStep(mode, "hundred-adjust", "#conceptStage .grid-controls"),
+        fractionGuideStep(mode, "hundred-check", "#checkBtn")
+      ]
+    };
+    return flows[mode] || flows.set;
+  }
+
+  function refreshOperationGuideSteps() {
+    if (!operationGuide || activeGuideMode || configuredGuideMode === state.mode) return;
+    operationGuide.configure({ steps: getModeGuideSteps(state.mode) });
+    configuredGuideMode = state.mode;
+  }
+
+  async function initOperationGuide() {
+    try {
+      const sharedGuide = await window.EdCloudOperationGuideReady;
+      if (!sharedGuide?.mount) return;
+      operationGuide = sharedGuide.mount({
+        guideId: "math-y3-smart-fraction-visual-tool",
+        language: guideLanguage(),
+        soundEnabled: state.sound,
+        dockOffset: { right: 16, bottom: 20, mobileRight: 10, mobileBottom: 20 },
+        steps: getModeGuideSteps(state.mode)
+      });
+      configuredGuideMode = state.mode;
+      operationGuide.addEventListener("guide-started", () => { activeGuideMode = state.mode; });
+      operationGuide.addEventListener("guide-closed", () => {
+        activeGuideMode = null;
+        refreshOperationGuideSteps();
+      });
+    } catch (error) {
+      console.warn("Shared operation guide failed to initialize.", error);
+    }
+  }
 
   function t() {
     return translations[state.lang];
@@ -394,7 +526,6 @@
   }
 
   function generateQuestion() {
-    celebrationLayer.replaceChildren();
     let question;
 
     if (state.mode === "set") {
@@ -452,20 +583,31 @@
   }
 
   function applyTranslations() {
-    document.documentElement.lang = state.lang === "zh" ? "zh-Hans" : state.lang;
+    document.documentElement.lang = state.lang === "zh" ? "zh-Hans" : state.lang === "bm" ? "ms" : "en";
     document.querySelectorAll("[data-i18n]").forEach(element => {
       const key = element.dataset.i18n;
       if (typeof t()[key] === "string") element.textContent = t()[key];
     });
 
     soundToggle.querySelector("span:last-child").textContent = state.sound ? t().soundOn : t().soundOff;
-    chapterEyebrow.textContent = t().chapter;
+    soundIcon.src = state.sound ? "assets/ui-icons/sound-on.png" : "assets/ui-icons/sound-off.png";
+    soundToggle.setAttribute("aria-label", state.sound ? t().soundOn : t().soundOff);
+    chapterEyebrow?.replaceChildren(document.createTextNode(t().chapter));
     levelBadge.textContent = gradeName();
     document.title = `${t().appTitle} · ${gradeName()}`;
-    modeTitle.textContent = t()[`mode${state.mode.charAt(0).toUpperCase()}${state.mode.slice(1)}`];
-    conceptTip.textContent = t().tips[state.mode];
-    howToText.textContent = t().howTo[state.mode];
+    if (modeTitle) modeTitle.textContent = t()[`mode${state.mode.charAt(0).toUpperCase()}${state.mode.slice(1)}`];
+    if (conceptTip) conceptTip.textContent = t().tips[state.mode];
+    if (howToText) howToText.textContent = t().howTo[state.mode];
     promptText.textContent = t().prompts[state.mode];
+    updateFullscreenButton();
+  }
+
+  function updateFullscreenButton() {
+    const fullscreen = Boolean(document.fullscreenElement);
+    const label = fullscreen ? t().exitFullscreen : t().fullscreen;
+    fullscreenToggle.querySelector("span:last-child").textContent = label;
+    fullscreenToggle.setAttribute("aria-pressed", String(fullscreen));
+    fullscreenToggle.setAttribute("aria-label", label);
   }
 
   function openTeacherDialog() {
@@ -657,7 +799,6 @@
     state.selectedIndices = new Set();
     state.selectedCount = 0;
     state.solved = false;
-    celebrationLayer.replaceChildren();
     teacherDialog.close();
     playMove();
     renderQuestion();
@@ -672,8 +813,10 @@
     applyTranslations();
     renderChallenge();
     renderStage();
-    setFeedback(t().ready[state.mode]);
+    if (state.solved) setFeedback(makeSuccessMessage(), "success", true);
+    else setFeedback(t().ready[state.mode]);
     updateCheckButton();
+    refreshOperationGuideSteps();
   }
 
   function renderChallenge() {
@@ -725,8 +868,9 @@
     readout.className = "selection-readout";
 
     const groupCount = state.question.denominator;
+    grid.dataset.groupCount = String(groupCount);
     grid.style.setProperty("--group-columns", Math.min(groupCount, 5));
-    grid.style.setProperty("--group-columns-mobile", groupCount <= 3 ? groupCount : Math.min(groupCount, 4));
+    grid.style.setProperty("--group-columns-mobile", groupCount >= 5 ? 3 : groupCount);
 
     for (let groupIndex = 0; groupIndex < groupCount; groupIndex += 1) {
       const group = document.createElement("button");
@@ -734,9 +878,17 @@
       const label = document.createElement("span");
       group.type = "button";
       group.className = "object-group";
+      group.dataset.objectCount = String(state.question.groupSize);
       objects.className = "group-objects";
       label.className = "group-number";
-      objects.textContent = Array(state.question.groupSize).fill(state.question.icon).join("");
+      objects.style.setProperty("--object-columns", String(state.question.groupSize === 4 ? 2 : Math.min(state.question.groupSize, 3)));
+      objects.setAttribute("aria-hidden", "true");
+      Array.from({ length: state.question.groupSize }, () => {
+        const icon = document.createElement("span");
+        icon.className = "group-object-icon";
+        icon.textContent = state.question.icon;
+        objects.append(icon);
+      });
       label.textContent = formatTemplate(t().group, { number: groupIndex + 1 });
       group.setAttribute("aria-pressed", String(state.selectedIndices.has(groupIndex)));
       group.classList.toggle("is-selected", state.selectedIndices.has(groupIndex));
@@ -776,6 +928,7 @@
     svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", `${state.question.denominator} pizza slices`);
     guide.className = "pizza-guide";
+    svg.append(createPizzaCrayonDefs());
 
     for (let index = 0; index < state.question.denominator; index += 1) {
       const slice = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -801,11 +954,16 @@
     const toppingPositions = [[120, 105], [195, 102], [102, 175], [170, 155], [220, 190], [142, 225], [205, 238]];
     toppingPositions.forEach(([cx, cy]) => {
       const topping = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      const highlight = document.createElementNS("http://www.w3.org/2000/svg", "circle");
       topping.setAttribute("cx", cx);
       topping.setAttribute("cy", cy);
       topping.setAttribute("r", "10");
       topping.classList.add("pizza-topping");
-      svg.append(topping);
+      highlight.setAttribute("cx", String(cx - 3));
+      highlight.setAttribute("cy", String(cy - 3));
+      highlight.setAttribute("r", "2.6");
+      highlight.classList.add("pizza-topping-highlight");
+      svg.append(topping, highlight);
     });
 
     const cheeseRing = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -818,7 +976,11 @@
     crust.setAttribute("cy", "160");
     crust.setAttribute("r", "135");
     crust.classList.add("pizza-crust");
-    svg.append(cheeseRing, crust);
+    const crustColor = crust.cloneNode();
+    crustColor.classList.add("pizza-crust-color");
+    const crustWax = crust.cloneNode();
+    crustWax.classList.add("pizza-crust-wax");
+    svg.append(crust, crustColor, crustWax, cheeseRing);
 
     guide.innerHTML = `${fractionMarkup(state.selectedIndices.size, state.question.denominator)}<p>${formatTemplate(t().selectedSlices, {
       selected: state.selectedIndices.size,
@@ -827,6 +989,35 @@
     board.append(svg, guide);
     activity.append(board);
     conceptStage.append(activity);
+  }
+
+  function createPizzaCrayonDefs() {
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    defs.innerHTML = `
+      <pattern id="pizza-crayon-cheese" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+        <rect width="18" height="18" fill="#fff0b8"></rect>
+        <path d="M-3 3H21 M-3 9H21 M-3 15H21" stroke="#ffc129" stroke-width="2.4" stroke-linecap="round" opacity=".28"></path>
+        <path d="M2 0V18 M12 0V18" stroke="#f5851f" stroke-width="1.2" stroke-linecap="round" opacity=".12"></path>
+      </pattern>
+      <pattern id="pizza-crayon-hover" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+        <rect width="18" height="18" fill="#ffd66f"></rect>
+        <path d="M-3 3H21 M-3 9H21 M-3 15H21" stroke="#f5851f" stroke-width="2.8" stroke-linecap="round" opacity=".34"></path>
+        <path d="M2 0V18 M12 0V18" stroke="#fff6cd" stroke-width="1.5" stroke-linecap="round" opacity=".35"></path>
+      </pattern>
+      <pattern id="pizza-crayon-selected" width="18" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-8)">
+        <rect width="18" height="18" fill="#f5851f"></rect>
+        <path d="M-3 3H21 M-3 9H21 M-3 15H21" stroke="#ffc129" stroke-width="3" stroke-linecap="round" opacity=".42"></path>
+        <path d="M2 0V18 M12 0V18" stroke="#fff0b8" stroke-width="1.4" stroke-linecap="round" opacity=".2"></path>
+      </pattern>
+      <pattern id="pizza-crayon-topping" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+        <rect width="9" height="9" fill="#d6524a"></rect>
+        <path d="M-2 2H11 M-2 7H11" stroke="#ef7868" stroke-width="2" stroke-linecap="round" opacity=".55"></path>
+      </pattern>
+      <filter id="pizza-crayon-wobble" x="-12%" y="-12%" width="124%" height="124%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="17" result="noise"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="B"></feDisplacementMap>
+      </filter>`;
+    return defs;
   }
 
   function sectorPath(cx, cy, radius, startAngle, endAngle) {
@@ -1069,7 +1260,6 @@
     if (currentAnswer() === state.question.expected) {
       state.solved = true;
       setFeedback(makeSuccessMessage(), "success", true);
-      playSuccess();
       celebrate();
       renderStage();
       updateCheckButton();
@@ -1110,19 +1300,38 @@
   }
 
   function celebrate() {
-    const colors = ["#ffca4f", "#35a58c", "#3579b9", "#ef9837", "#d64f4f"];
-    celebrationLayer.replaceChildren();
-    for (let index = 0; index < 26; index += 1) {
-      const piece = document.createElement("span");
-      piece.className = "confetti-piece";
-      piece.style.setProperty("--confetti-color", colors[index % colors.length]);
-      piece.style.setProperty("--confetti-x", `${randomInt(-350, 350)}px`);
-      piece.style.setProperty("--confetti-y", `${randomInt(-230, 230)}px`);
-      piece.style.setProperty("--confetti-r", `${randomInt(-540, 540)}deg`);
-      piece.style.animationDelay = `${index * 9}ms`;
-      celebrationLayer.append(piece);
+    const celebration = window.EdCloudCorrectCelebration;
+    if (typeof celebration?.show !== "function") {
+      playSuccess();
+      return;
     }
-    window.setTimeout(() => celebrationLayer.replaceChildren(), 1000);
+    celebration.show({
+      animation: "random",
+      language: guideLanguage(),
+      title: t().correct,
+      message: t().prompts[state.mode],
+      answerLabel: state.lang === "zh" ? "答案" : state.lang === "bm" ? "Jawapan" : "Answer",
+      answerText: plainSuccessAnswer(),
+      reviewText: state.lang === "zh" ? "再看一次" : state.lang === "bm" ? "Lihat semula" : "Review",
+      nextText: t().next,
+      soundEnabled: state.sound,
+      onReview: () => conceptStage.focus({ preventScroll: true }),
+      onNext: generateQuestion
+    });
+  }
+
+  function plainSuccessAnswer() {
+    if (state.mode === "set") {
+      return `${state.question.numerator * state.question.groupSize}/${state.question.total} = ${state.question.numerator}/${state.question.denominator}`;
+    }
+    if (state.mode === "pizza") return `${state.question.numerator}/${state.question.denominator}`;
+    if (state.mode === "equivalent") {
+      return `${state.question.numerator}/${state.question.denominator} = ${state.question.equivalentNumerator}/${state.question.equivalentDenominator}`;
+    }
+    if (state.mode === "mixed") {
+      return `${state.question.improperNumerator}/${state.question.denominator} = ${state.question.whole} ${state.question.remainder}/${state.question.denominator}`;
+    }
+    return `${state.question.count}/100 = ${decimalFor(state.question.count)} = ${state.question.count}%`;
   }
 
   function ensureAudioContext() {
@@ -1169,7 +1378,7 @@
 
   modeTabs.addEventListener("click", event => {
     const button = event.target.closest("[data-mode]");
-    if (!button || button.dataset.mode === state.mode) return;
+    if (!button || activeGuideMode || button.dataset.mode === state.mode) return;
     state.mode = button.dataset.mode;
     document.querySelectorAll(".mode-tab").forEach(tab => {
       const active = tab === button;
@@ -1190,16 +1399,29 @@
       });
       playClick();
       renderQuestion();
+      operationGuide?.setLanguage(guideLanguage());
     });
   });
 
   soundToggle.addEventListener("click", () => {
     state.sound = !state.sound;
     soundToggle.setAttribute("aria-pressed", String(state.sound));
-    soundToggle.querySelector("span:first-child").textContent = state.sound ? "🔊" : "🔇";
     soundToggle.querySelector("span:last-child").textContent = state.sound ? t().soundOn : t().soundOff;
+    soundIcon.src = state.sound ? "assets/ui-icons/sound-on.png" : "assets/ui-icons/sound-off.png";
+    operationGuide?.setSoundEnabled(state.sound);
     if (state.sound) playClick();
   });
+
+  fullscreenToggle.addEventListener("click", async () => {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await document.documentElement.requestFullscreen();
+    } catch (_) {
+      // Fullscreen can be unavailable inside some embedded web views.
+    }
+    updateFullscreenButton();
+  });
+  document.addEventListener("fullscreenchange", updateFullscreenButton);
 
   teacherBtn.addEventListener("click", () => {
     playClick();
@@ -1220,4 +1442,5 @@
   });
 
   generateQuestion();
+  void initOperationGuide();
 })();

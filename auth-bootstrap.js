@@ -16,8 +16,7 @@ const TRUSTED_LAUNCHER_ORIGINS = Object.freeze([
 const authGate = document.getElementById("authGate");
 const authTitle = document.getElementById("authTitle");
 const authMessage = document.getElementById("authMessage");
-const appShell = document.querySelector(".app-shell");
-const forestFooter = document.querySelector(".forest-footer");
+const pageShell = document.querySelector(".page-shell");
 
 function showStartupError(title, message) {
   authGate.classList.add("is-error");
@@ -48,6 +47,7 @@ async function startTool() {
   }
 
   try {
+    await import("./shared-components-loader.js");
     await import("./app.js");
   } catch {
     showStartupError(
@@ -57,9 +57,8 @@ async function startTool() {
     return;
   }
 
-  appShell.hidden = false;
-  forestFooter.hidden = false;
-  const appTitle = appShell.querySelector("h1");
+  pageShell.hidden = false;
+  const appTitle = pageShell.querySelector("h1");
   authGate.remove();
 
   if (appTitle) {

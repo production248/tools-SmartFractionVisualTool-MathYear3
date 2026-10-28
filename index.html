@@ -1,12 +1,13 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ms">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffca4f">
-  <meta name="description" content="An interactive visual tool for understanding fractions, decimals and percentages in SJKC Year 3 Mathematics.">
+  <meta name="theme-color" content="#ffc129">
+  <meta name="description" content="Alat visual interaktif untuk memahami pecahan Matematik Tahun 3.">
   <title>Smart Fraction Visual Tool - Math Year 3</title>
   <link rel="icon" type="image/png" href="edcloud-app-icon.png">
+  <link rel="preload" href="assets/ui-icons/sound-off.png" as="image" type="image/png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,10 +19,10 @@
     </div>
   </section>
 
-  <div class="app-shell" hidden>
+  <div class="page-shell" hidden>
     <header class="topbar">
       <div class="brand">
-        <span class="brand-icon" aria-hidden="true">🍰</span>
+        <img class="brand-icon" src="edcloud-app-icon.png" alt="" aria-hidden="true" draggable="false">
         <div>
           <h1 data-i18n="appTitle">Jom Teroka Pecahan!</h1>
           <p data-i18n="appSubtitle">Lihat, sentuh dan fahami bahagiannya.</p>
@@ -29,8 +30,12 @@
       </div>
 
       <div class="header-actions">
+        <button class="fullscreen-button" id="fullscreenToggle" type="button" aria-pressed="false">
+          <span aria-hidden="true">⛶</span><span data-i18n="fullscreen">Skrin penuh</span>
+        </button>
         <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true">
-          <span aria-hidden="true">🔊</span><span data-i18n="soundOn">Bunyi: Buka</span>
+          <img id="soundIcon" class="sound-icon" src="assets/ui-icons/sound-on.png" width="28" height="28" alt="" aria-hidden="true" draggable="false">
+          <span data-i18n="soundOn">Bunyi</span>
         </button>
         <div class="language-switch" role="group" aria-label="Language">
           <button class="language-btn active" type="button" data-lang="bm" aria-pressed="true">BM</button>
@@ -43,64 +48,42 @@
     <main>
       <nav class="mode-tabs" id="modeTabs" aria-label="Learning modes">
         <button class="mode-tab active" type="button" data-mode="set" aria-pressed="true">
-          <span aria-hidden="true">🍎</span><span data-i18n="modeSet">Bahagian Kumpulan</span>
+          <img class="mode-icon" src="assets/activity-icons/set.png" width="58" height="58" alt="" aria-hidden="true" draggable="false"><span data-i18n="modeSet">Bahagian Kumpulan</span>
         </button>
         <button class="mode-tab" type="button" data-mode="pizza" aria-pressed="false">
-          <span aria-hidden="true">🍕</span><span data-i18n="modePizza">Piza Pecahan</span>
+          <img class="mode-icon" src="assets/activity-icons/pizza.png" width="58" height="58" alt="" aria-hidden="true" draggable="false"><span data-i18n="modePizza">Piza Pecahan</span>
         </button>
         <button class="mode-tab" type="button" data-mode="equivalent" aria-pressed="false">
-          <span aria-hidden="true">🟰</span><span data-i18n="modeEquivalent">Pecahan Setara</span>
+          <img class="mode-icon" src="assets/activity-icons/equivalent.png" width="58" height="58" alt="" aria-hidden="true" draggable="false"><span data-i18n="modeEquivalent">Pecahan Setara</span>
         </button>
         <button class="mode-tab" type="button" data-mode="mixed" aria-pressed="false">
-          <span aria-hidden="true">🧱</span><span data-i18n="modeMixed">Tak Wajar & Bercampur</span>
+          <img class="mode-icon" src="assets/activity-icons/mixed.png" width="58" height="58" alt="" aria-hidden="true" draggable="false"><span data-i18n="modeMixed">Tak Wajar &amp; Bercampur</span>
         </button>
         <button class="mode-tab" type="button" data-mode="hundred" aria-pressed="false">
-          <span aria-hidden="true">💯</span><span data-i18n="modeHundred">Grid Seratus</span>
+          <img class="mode-icon" src="assets/activity-icons/hundred.png" width="58" height="58" alt="" aria-hidden="true" draggable="false"><span data-i18n="modeHundred">Grid Seratus</span>
         </button>
       </nav>
 
       <section class="workspace">
-        <aside class="control-panel" aria-labelledby="modeTitle">
-          <div class="panel-heading">
-            <span class="eyebrow" data-i18n="chapter">D3 · Jilid 1</span>
-            <h2 id="modeTitle">Bahagian Kumpulan</h2>
-          </div>
-
-          <div class="chapter-card">
-            <span class="chapter-icon" aria-hidden="true">👀</span>
-            <div>
-              <strong data-i18n="learnBySeeing">Belajar dengan melihat</strong>
-              <p id="conceptTip">Penyebut menunjukkan jumlah bahagian yang sama.</p>
-            </div>
-          </div>
-
-          <div class="how-to-card">
-            <span class="how-to-icon" aria-hidden="true">☝️</span>
-            <p id="howToText">Tekan objek untuk memilih bahagiannya.</p>
-          </div>
-
-          <button class="secondary-btn teacher-btn" id="teacherBtn" type="button">
-            <span aria-hidden="true">👩‍🏫</span><span data-i18n="teacherQuestion">Guru buat soalan</span>
-          </button>
-
-          <button class="secondary-btn full-width" id="newQuestionBtn" type="button">
-            <span aria-hidden="true">↻</span><span data-i18n="newQuestion">Cuba soalan lain</span>
-          </button>
-        </aside>
-
         <section class="visual-panel" aria-labelledby="promptText">
-          <div class="celebration-layer" id="celebrationLayer" aria-hidden="true"></div>
-
           <div class="prompt-row">
             <div>
               <span class="eyebrow" data-i18n="yourTask">Mari cuba!</span>
               <h2 id="promptText">Tunjukkan pecahan daripada kumpulan ini.</h2>
             </div>
-            <span class="level-badge" id="levelBadge">Matematik Tahun 3</span>
+            <div class="heading-actions">
+              <span class="level-badge" id="levelBadge">Matematik Tahun 3</span>
+              <button class="secondary-btn compact" id="teacherBtn" type="button">
+                <span aria-hidden="true">👩‍🏫</span><span data-i18n="teacherQuestion">Guru buat soalan</span>
+              </button>
+              <button class="primary-btn compact" id="newQuestionBtn" type="button">
+                <span aria-hidden="true">🎲</span><span data-i18n="newQuestion">Cuba soalan lain</span>
+              </button>
+            </div>
           </div>
 
           <div class="challenge-display" id="challengeDisplay" aria-live="polite"></div>
-          <div class="concept-stage" id="conceptStage"></div>
+          <div class="concept-stage" id="conceptStage" tabindex="-1"></div>
 
           <div class="answer-actions">
             <button class="secondary-btn" id="resetBtn" type="button">
@@ -114,17 +97,7 @@
           <div class="feedback" id="feedback" aria-live="polite"></div>
         </section>
       </section>
-
-      <section class="learning-strip" aria-label="Learning steps">
-        <div><span>1</span><strong data-i18n="stepLook">Lihat keseluruhan</strong></div>
-        <div><span>2</span><strong data-i18n="stepTouch">Pilih bahagiannya</strong></div>
-        <div><span>3</span><strong data-i18n="stepConnect">Hubungkan nilainya</strong></div>
-      </section>
     </main>
-  </div>
-
-  <div class="forest-footer" aria-hidden="true" hidden>
-    <img src="assets/forest-footer.png" alt="">
   </div>
 
   <dialog class="teacher-dialog" id="teacherDialog" aria-labelledby="teacherDialogTitle">
@@ -152,4 +125,3 @@
   <script type="module" src="auth-bootstrap.js"></script>
 </body>
 </html>
-
