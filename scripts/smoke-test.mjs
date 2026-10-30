@@ -9,8 +9,8 @@ const toolRoot = resolve(here, "..");
 const previewFile = resolve(toolRoot, "index-preview.html");
 const productionFile = resolve(toolRoot, "index.html");
 const modes = [
-  { id: "set", goal: "Belajar pecahan kumpulan", key: "goal-set" },
   { id: "pizza", goal: "Belajar pecahan piza", key: "goal-pizza" },
+  { id: "set", goal: "Belajar pecahan kumpulan", key: "goal-set" },
   { id: "equivalent", goal: "Belajar pecahan setara", key: "goal-equivalent" },
   { id: "mixed", goal: "Belajar nombor bercampur", key: "goal-mixed" },
   { id: "hundred", goal: "Belajar grid seratus", key: "goal-hundred" }
@@ -151,6 +151,7 @@ try {
     const rect = selector => document.querySelector(selector).getBoundingClientRect().toJSON();
     return {
       modes: [...document.querySelectorAll('[data-mode]')].map(button => button.dataset.mode),
+      modeLabels: [...document.querySelectorAll('[data-mode]')].map(button => button.textContent.trim()),
       brandTitle: font('.brand h1'),
       brandSubtitle: font('.brand p'),
       modeFont: font('.mode-tab'),
@@ -172,6 +173,7 @@ try {
     };
   })()`);
   assert(JSON.stringify(desktop.modes) === JSON.stringify(modes.map(mode => mode.id)), `Wrong modes: ${JSON.stringify(desktop)}`);
+  assert(JSON.stringify(desktop.modeLabels.slice(0, 2)) === JSON.stringify(["Sebahagian daripada Satu Keseluruhan", "Bahagian Kumpulan"]), `The first two Malay mode labels are wrong or out of order: ${JSON.stringify(desktop.modeLabels)}`);
   assert(desktop.brandTitle <= 41 && desktop.brandSubtitle === 14, `Brand copy was enlarged: ${JSON.stringify(desktop)}`);
   assert(desktop.modeFont >= 19 && desktop.promptFont >= 42 && desktop.challengeFont >= 44 && desktop.feedbackFont >= 28, `Classroom copy is too small: ${JSON.stringify(desktop)}`);
   assert(desktop.panel.width >= desktop.shell.width - 2 && !desktop.sidePanel && !desktop.steps && !desktop.forest, `Legacy layout is still present: ${JSON.stringify(desktop)}`);
@@ -185,6 +187,13 @@ try {
   await call("Emulation.setEmulatedMedia", { media: "screen", features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
   assert(await evaluate(`getComputedStyle(document.querySelector('.mode-tab:not(.active)')).animationName === 'none'`), "Reduced-motion mode did not disable nudges.");
   await call("Emulation.setEmulatedMedia", { media: "screen", features: [{ name: "prefers-reduced-motion", value: "no-preference" }] });
+
+  await evaluate(`document.querySelector('.language-btn[data-lang="zh"]').click()`);
+  assert(await evaluate(`document.querySelector('[data-mode="pizza"] span').textContent === '一个整体的一部分'`), "The Chinese whole-part label is wrong.");
+  await evaluate(`document.querySelector('.language-btn[data-lang="en"]').click()`);
+  assert(await evaluate(`document.querySelector('[data-mode="pizza"] span').textContent === 'Part of One Whole'`), "The English whole-part label is wrong.");
+  await evaluate(`document.querySelector('.language-btn[data-lang="bm"]').click()`);
+  assert(await evaluate(`document.querySelector('[data-mode="pizza"] span').textContent === 'Sebahagian daripada Satu Keseluruhan'`), "The Malay whole-part label is wrong.");
 
   for (const mode of modes) {
     await evaluate(`document.querySelector('.mode-tab[data-mode="${mode.id}"]').click()`);

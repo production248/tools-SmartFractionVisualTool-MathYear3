@@ -1,4 +1,5 @@
 :root {
+  --font-zh: KaiTi, STKaiti, "Kaiti SC", "楷体", "DFKai-SB", serif;
   --page-yellow: #ffe7b0;
   --sunny-yellow: #ffca4f;
   --ink: #3f321e;
@@ -22,6 +23,11 @@
 }
 
 * { box-sizing: border-box; }
+
+html:lang(zh) body,
+html:lang(zh) body * {
+  font-family: var(--font-zh) !important;
+}
 
 body {
   position: relative;
