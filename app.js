@@ -1312,6 +1312,7 @@
       message: t().prompts[state.mode],
       answerLabel: state.lang === "zh" ? "答案" : state.lang === "bm" ? "Jawapan" : "Answer",
       answerText: plainSuccessAnswer(),
+      answerParts: successAnswerParts(),
       reviewText: state.lang === "zh" ? "再看一次" : state.lang === "bm" ? "Lihat semula" : "Review",
       nextText: t().next,
       soundEnabled: state.sound,
@@ -1332,6 +1333,49 @@
       return `${state.question.improperNumerator}/${state.question.denominator} = ${state.question.whole} ${state.question.remainder}/${state.question.denominator}`;
     }
     return `${state.question.count}/100 = ${decimalFor(state.question.count)} = ${state.question.count}%`;
+  }
+
+  function successAnswerParts() {
+    const fraction = (numerator, denominator) => ({ type: "fraction", numerator, denominator });
+    const equals = () => ({ type: "operator", text: "=" });
+    const text = value => ({ type: "text", text: String(value) });
+
+    if (state.mode === "set") {
+      return [
+        fraction(state.question.numerator * state.question.groupSize, state.question.total),
+        equals(),
+        fraction(state.question.numerator, state.question.denominator)
+      ];
+    }
+    if (state.mode === "pizza") {
+      return [fraction(state.question.numerator, state.question.denominator)];
+    }
+    if (state.mode === "equivalent") {
+      return [
+        fraction(state.question.numerator, state.question.denominator),
+        equals(),
+        fraction(state.question.equivalentNumerator, state.question.equivalentDenominator)
+      ];
+    }
+    if (state.mode === "mixed") {
+      return [
+        fraction(state.question.improperNumerator, state.question.denominator),
+        equals(),
+        {
+          type: "mixed",
+          whole: state.question.whole,
+          numerator: state.question.remainder,
+          denominator: state.question.denominator
+        }
+      ];
+    }
+    return [
+      fraction(state.question.count, 100),
+      equals(),
+      text(decimalFor(state.question.count)),
+      equals(),
+      text(`${state.question.count}%`)
+    ];
   }
 
   function ensureAudioContext() {

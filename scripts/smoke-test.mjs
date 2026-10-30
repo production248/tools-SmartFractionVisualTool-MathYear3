@@ -292,8 +292,77 @@ try {
   })()`);
   await waitFor(`document.querySelector('edcloud-correct-celebration')?.shadowRoot.querySelector('.cc-dialog')?.open`, "Correct-answer celebration did not open.");
   assert(await evaluate(`document.querySelector('edcloud-correct-celebration').shadowRoot.querySelector('.cc-title').textContent === 'Betul!'`), "Celebration title is wrong.");
+  const setAnswer = await evaluate(`(() => {
+    const root = document.querySelector('edcloud-correct-celebration').shadowRoot;
+    const fractions = [...root.querySelectorAll('.cc-fraction')];
+    return {
+      label: root.querySelector('.cc-answer-text').getAttribute('aria-label'),
+      fractionCount: fractions.length,
+      mixedCount: root.querySelectorAll('.cc-mixed-number').length,
+      values: fractions.map(fraction => [
+        fraction.querySelector('.cc-fraction-numerator').textContent,
+        fraction.querySelector('.cc-fraction-denominator').textContent
+      ].join('/')),
+      stacked: fractions.every(fraction => {
+        const numerator = fraction.querySelector('.cc-fraction-numerator').getBoundingClientRect();
+        const line = fraction.querySelector('.cc-fraction-line').getBoundingClientRect();
+        const denominator = fraction.querySelector('.cc-fraction-denominator').getBoundingClientRect();
+        return numerator.bottom <= line.top + 1 && line.bottom <= denominator.top + 1;
+      })
+    };
+  })()`);
+  assert(
+    setAnswer.label === '6/15 = 2/5' &&
+      setAnswer.fractionCount === 2 &&
+      setAnswer.mixedCount === 0 &&
+      setAnswer.values.join('|') === '6/15|2/5' &&
+      setAnswer.stacked,
+    `Set celebration fractions are wrong: ${JSON.stringify(setAnswer)}`
+  );
   await evaluate(`window.EdCloudCorrectCelebration.close('smoke-test')`);
   await waitFor(`!document.querySelector('edcloud-correct-celebration').shadowRoot.querySelector('.cc-dialog').open`, "Celebration did not close.");
+
+  await evaluate(`document.querySelector('.mode-tab[data-mode="mixed"]').click(); document.querySelector('#teacherBtn').click()`);
+  await waitFor(`document.querySelector('#teacherDialog').open`, "Teacher dialog did not open for mixed-number celebration test.");
+  await evaluate(`(() => {
+    document.querySelector('#teacher-whole').value = '2';
+    document.querySelector('#teacher-remainder').value = '1';
+    document.querySelector('#teacher-denominator').value = '4';
+    document.querySelector('#teacher-direction').value = 'mixed';
+    document.querySelector('#teacherForm').requestSubmit();
+  })()`);
+  await waitFor(`document.querySelectorAll('.unit-piece').length === 12`, "Mixed-number question was not rendered.");
+  await evaluate(`document.querySelectorAll('.unit-piece')[8].click(); document.querySelector('#checkBtn').click()`);
+  await waitFor(`document.querySelector('edcloud-correct-celebration')?.shadowRoot.querySelector('.cc-dialog')?.open`, "Mixed-number celebration did not open.");
+  const mixedAnswer = await evaluate(`(() => {
+    const root = document.querySelector('edcloud-correct-celebration').shadowRoot;
+    const mixed = root.querySelector('.cc-mixed-number');
+    const fractions = [...root.querySelectorAll('.cc-fraction')];
+    return {
+      label: root.querySelector('.cc-answer-text').getAttribute('aria-label'),
+      fractionCount: fractions.length,
+      mixedCount: root.querySelectorAll('.cc-mixed-number').length,
+      whole: mixed?.querySelector('.cc-whole-number')?.textContent,
+      values: fractions.map(fraction => [
+        fraction.querySelector('.cc-fraction-numerator').textContent,
+        fraction.querySelector('.cc-fraction-denominator').textContent
+      ].join('/')),
+      overflow: root.querySelector('.cc-answer').scrollWidth > root.querySelector('.cc-answer').clientWidth + 1
+    };
+  })()`);
+  assert(
+    mixedAnswer.label === '9/4 = 2 1/4' &&
+      mixedAnswer.fractionCount === 2 &&
+      mixedAnswer.mixedCount === 1 &&
+      mixedAnswer.whole === '2' &&
+      mixedAnswer.values.join('|') === '9/4|1/4' &&
+      !mixedAnswer.overflow,
+    `Mixed-number celebration is wrong: ${JSON.stringify(mixedAnswer)}`
+  );
+  const mixedCelebrationScreenshot = await call("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
+  writeFileSync(join(tmpdir(), "fraction-edcloud-celebration-mixed.png"), Buffer.from(mixedCelebrationScreenshot.data, "base64"));
+  await evaluate(`window.EdCloudCorrectCelebration.close('smoke-test')`);
+  await waitFor(`!document.querySelector('edcloud-correct-celebration').shadowRoot.querySelector('.cc-dialog').open`, "Mixed-number celebration did not close.");
 
   await evaluate(`document.querySelector('.language-btn[data-lang="zh"]').click()`);
   await waitFor(`document.documentElement.lang === 'zh-Hans'`, "Chinese UI did not activate.");
@@ -319,6 +388,47 @@ try {
   assert(mobile.panel.top < 620 && mobile.iconWidths.every(width => width >= 39) && mobile.challengeSize >= 38 && mobile.groupsFit, `Mobile classroom layout is too small, too low, or has group overflow: ${JSON.stringify(mobile)}`);
   const mobileScreenshot = await call("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
   writeFileSync(join(tmpdir(), "fraction-edcloud-smoke-mobile.png"), Buffer.from(mobileScreenshot.data, "base64"));
+
+  await evaluate(`window.EdCloudCorrectCelebration.show({
+    animation: 'thumbs-up-pop',
+    language: 'bm',
+    answerText: '9/4 = 2 1/4',
+    answerParts: [
+      { type: 'fraction', numerator: 9, denominator: 4 },
+      { type: 'operator', text: '=' },
+      { type: 'mixed', whole: 2, numerator: 1, denominator: 4 }
+    ],
+    soundEnabled: false
+  })`);
+  await waitFor(`document.querySelector('edcloud-correct-celebration')?.shadowRoot.querySelector('.cc-dialog')?.open`, "Mobile fraction celebration did not open.");
+  const mobileCelebration = await evaluate(`(() => {
+    const root = document.querySelector('edcloud-correct-celebration').shadowRoot;
+    const dialog = root.querySelector('.cc-dialog');
+    const answer = root.querySelector('.cc-answer');
+    const rect = dialog.getBoundingClientRect();
+    return {
+      rect: rect.toJSON(),
+      fractionCount: root.querySelectorAll('.cc-fraction').length,
+      mixedCount: root.querySelectorAll('.cc-mixed-number').length,
+      answerOverflow: answer.scrollWidth > answer.clientWidth + 1,
+      dialogOverflow: dialog.scrollWidth > dialog.clientWidth + 1
+    };
+  })()`);
+  assert(
+    mobileCelebration.rect.left >= 0 &&
+      mobileCelebration.rect.right <= 390 &&
+      mobileCelebration.rect.top >= 0 &&
+      mobileCelebration.rect.bottom <= 844 &&
+      mobileCelebration.fractionCount === 2 &&
+      mobileCelebration.mixedCount === 1 &&
+      !mobileCelebration.answerOverflow &&
+      !mobileCelebration.dialogOverflow,
+    `Mobile fraction celebration overflows: ${JSON.stringify(mobileCelebration)}`
+  );
+  const mobileCelebrationScreenshot = await call("Page.captureScreenshot", { format: "png", captureBeyondViewport: true });
+  writeFileSync(join(tmpdir(), "fraction-edcloud-celebration-mixed-mobile.png"), Buffer.from(mobileCelebrationScreenshot.data, "base64"));
+  await evaluate(`window.EdCloudCorrectCelebration.close('smoke-test')`);
+  await waitFor(`!document.querySelector('edcloud-correct-celebration').shadowRoot.querySelector('.cc-dialog').open`, "Mobile fraction celebration did not close.");
 
   await evaluate(`document.querySelector('edcloud-operation-guide').shadowRoot.querySelector('.actor-button').click()`);
   await waitFor(`!document.querySelector('edcloud-operation-guide').shadowRoot.querySelector('.guide-layer').hidden`, "Mobile guide did not open.");
